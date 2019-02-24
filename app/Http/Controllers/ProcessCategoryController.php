@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\ProcessCategory;
 use Illuminate\Http\Request;
+use App\Group;
+use App\User;
 
 class ProcessCategoryController extends Controller
 {
@@ -14,7 +16,7 @@ class ProcessCategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('process.category.index');
     }
 
     /**
@@ -24,7 +26,9 @@ class ProcessCategoryController extends Controller
      */
     public function create()
     {
-        //
+        $groups = Group::orderBy('name')->get();
+        $users = User::orderBy('name')->get();
+        return view('process.category.create', compact('groups', 'users'))->render();
     }
 
     /**
