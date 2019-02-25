@@ -80,6 +80,34 @@
         </nav>
 
         <main class="py-4">
+            <div class="container">
+                {{-- default validate erros --}}
+                @if ($errors->any())
+                    @component('components.alert.standard')
+                        @slot('class')
+                            alert-danger
+                        @endslot
+                        @slot('message')
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        @endslot
+                    @endcomponent
+                @endif
+                {{-- flash messages --}}
+                @if(Session::has('msg'))
+                    @component('components.alert.standard')
+                        @slot('class')
+                            {{ Session::get('type') }}
+                        @endslot
+                        @slot('message')
+                            {{ Session::get('msg') }}
+                        @endslot
+                    @endcomponent
+                @endif
+            </div>
             @yield('content')
         </main>
     </div>

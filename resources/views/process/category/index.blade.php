@@ -23,6 +23,29 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th scope="col">#ID</th>
+                            <th scope="col">name</th>
+                            <th scope="col">created_at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($categories as $categorie)
+                                <tr>
+                                    <th scope="row">{{ $categorie->id }}</th>
+                                    <td>{{ $categorie->name }}</td>
+                                    <td>{{ $categorie->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     @component('components.modal.larger')
@@ -37,13 +60,20 @@
 @section('own_js')
     <script>
         $('#btnCreateCategory').click(() => {
+            
             renderHtmlInComponent("{{ route('categories.create') }}");
-            $("[name=departments]").selectpicker({
-                "title": "Selecione os setores que terão acesso a essa categoria."        
-            }).selectpicker("render");
-            $("[name=users]").selectpicker({
-                "title": "Selecione os usuários que terão acesso a essa categoria."        
-            }).selectpicker("render");
+            $(".selectpicker").selectpicker().selectpicker("render");
+
+            //category permission actions
+            $('input[type=radio][name=permission]').on('change',function() {
+                const divRestricted = $('#restricted-permission');
+                if (this.value == 'public') {
+                    divRestricted.hide();
+                }
+                else if (this.value == 'restricted') {
+                    divRestricted.show();
+                }
+            });
         });
     </script>
 @endsection

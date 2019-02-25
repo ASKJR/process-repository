@@ -16,7 +16,8 @@ class ProcessCategoryController extends Controller
      */
     public function index()
     {
-        return view('process.category.index');
+        $categories = ProcessCategory::orderBy('name')->get();
+        return view('process.category.index', compact('categories'));
     }
 
     /**
@@ -39,7 +40,48 @@ class ProcessCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+            'permission' => 'required',
+        ]);
+        $name = $request->input('name');
+        if ($request->input('permission') == ProcessCategory::PUBLIC_PERMISSION) {
+            $permission = [
+                'security' => ProcessCategory::PUBLIC_PERMISSION,
+                'groups' => [],
+                'users' => []
+            ];
+            ProcessCategory::create([
+                'name' => $name,
+                'permission' => json_encode($permission)
+            ]);
+            return redirect()->route('categories.index')
+                ->with('type', 'alert-success')
+                ->with('msg', 'Categoria criada com sucesso.');
+        } else {
+
+            $departments = (empty($request->input('departments'))) ? [] : $request->input('departments');
+            $users = (empty($request->input('users'))) ? [] : $request->input('users');
+
+            if (empty($departments) && empty($users)) {
+                return redirect()->route('categories.index')
+                    ->with('type', 'alert-danger')
+                    ->with('msg', 'Você deve selecionar ao menos uma restrição para categorias privadas');
+            } else {
+                $permission = [
+                    'security' => ProcessCategory::RESTRICTED_PERMISSION,
+                    'groups' => $departments,
+                    'users' => $users
+                ];
+                ProcessCategory::create([
+                    'name' => $name,
+                    'permission' => json_encode($permission)
+                ]);
+                return redirect()->route('categories.index')
+                    ->with('type', 'alert-success')
+                    ->with('msg', 'Categoria criada com sucesso.');
+            }
+        }
     }
 
     /**
