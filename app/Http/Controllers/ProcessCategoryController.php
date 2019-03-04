@@ -9,6 +9,11 @@ use App\User;
 
 class ProcessCategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +33,6 @@ class ProcessCategoryController extends Controller
     public function create()
     {
         $groups = Group::orderBy('name')->get();
-        $users = User::orderBy('name')->get();
         return view('process.category.create', compact('groups', 'users'))->render();
     }
 
@@ -42,40 +46,55 @@ class ProcessCategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'permission' => 'required',
+            'visibility' => 'required',
         ]);
         $name = $request->input('name');
-        if ($request->input('permission') == ProcessCategory::PUBLIC_PERMISSION) {
-            $permission = [
-                'security' => ProcessCategory::PUBLIC_PERMISSION,
-                'groups' => [],
-                'users' => []
-            ];
+        if ($request->input('visibility') == ProcessCategory::PUBLIC_PERMISSION) {
             ProcessCategory::create([
                 'name' => $name,
-                'permission' => json_encode($permission)
+                'permission' => json_encode([]),
+                'visibility' => ProcessCategory::PUBLIC_PERMISSION
             ]);
             return redirect()->route('categories.index')
                 ->with('type', 'alert-success')
                 ->with('msg', 'Categoria criada com sucesso.');
         } else {
 
-            $departments = (empty($request->input('departments'))) ? [] : $request->input('departments');
-            $users = (empty($request->input('users'))) ? [] : $request->input('users');
+            $permissions = (empty($request->input('permissions'))) ? [] : $request->input('permissions');
 
-            if (empty($departments) && empty($users)) {
+            if (empty($permissions)) {
                 return redirect()->route('categories.index')
                     ->with('type', 'alert-danger')
-                    ->with('msg', 'Você deve selecionar ao menos uma restrição para categorias privadas');
+                    ->with('msg', 'Você deve selecionar retrições para setore e/ou usuários.');
             } else {
+                $usersIds = [];
+                $usersSelected = [];
+                $groupIds = [];
+
+                foreach ($permissions as $permission) {
+                    if ($permission[0] == 'g') {
+                        $groupId = explode("_", $permission)[1];
+                        $group = Group::findOrFail($groupId);
+                        $usersIds = array_merge($usersIds, $group->users->pluck('id')->all());
+                        $groupIds[] = $groupId;
+                    } else {
+                        $userId = explode("_", $permission)[1];
+
+                        if (!in_array($userId, $usersIds)) {
+                            $usersIds[] = $userId;
+                        }
+                        $usersSelected[] = $userId;
+                    }
+                }
                 $permission = [
-                    'security' => ProcessCategory::RESTRICTED_PERMISSION,
-                    'groups' => $departments,
-                    'users' => $users
+                    'users' => $usersIds,
+                    'users_selected' => $usersSelected, //usuários selecionados individualmente
+                    'groups' => $groupIds
                 ];
                 ProcessCategory::create([
                     'name' => $name,
-                    'permission' => json_encode($permission)
+                    'permission' => json_encode($permission),
+                    'visibility' => ProcessCategory::RESTRICTED_PERMISSION
                 ]);
                 return redirect()->route('categories.index')
                     ->with('type', 'alert-success')

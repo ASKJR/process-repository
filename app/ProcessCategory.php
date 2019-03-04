@@ -11,5 +11,5 @@ class ProcessCategory extends Model
     const PUBLIC_PERMISSION = 'public';
     const RESTRICTED_PERMISSION = 'restricted';
 
-    protected $fillable = ['name', 'permission'];
+    protected $fillable = ['name', 'permission', 'visibility'];
 }

@@ -65,14 +65,24 @@
             $(".selectpicker").selectpicker().selectpicker("render");
 
             //category permission actions
-            $('input[type=radio][name=permission]').on('change',function() {
+            $('input[type=radio][name=visibility]').on('change',function() {
                 const divRestricted = $('#restricted-permission');
                 if (this.value == 'public') {
                     divRestricted.hide();
+                    $('#selectPermission').attr('required',false);
+
                 }
                 else if (this.value == 'restricted') {
                     divRestricted.show();
+                    $('#selectPermission').attr('required',true);
                 }
+            });
+            $('#selectPermission').on('change', function(e) {
+                var selected = [];
+                $.each($(".selectpicker option:selected"), function(){
+                    selected.push($(this).text());
+                });
+                $('#permissionList').val(selected.join('\n'));
             });
         });
     </script>
