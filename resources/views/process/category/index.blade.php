@@ -26,23 +26,38 @@
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-hover">
-                        <thead class="thead-dark">
+                    <table class="table table-striped table-bordered" id="example" style="width:100%">
+                        <thead>
                             <tr>
-                            <th scope="col">#ID</th>
-                            <th scope="col">name</th>
-                            <th scope="col">created_at</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Visibilidade </th>
+                                <th scope="col">Criada em</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($categories as $categorie)
                                 <tr>
-                                    <th scope="row">{{ $categorie->id }}</th>
-                                    <td>{{ $categorie->name }}</td>
-                                    <td>{{ $categorie->created_at }}</td>
+                                    <td> {{ $categorie->name }} </td>
+                                    @if($categorie->visibility == 'public')
+                                        <td>
+                                            <p class="btn btn-sm btn-success">{{ $categorie->visibility_translated }} {!! $categorie->visibility_icon !!}</p>
+                                        </td>
+                                    @else
+                                        <td>
+                                            <p class="btn btn-sm btn-danger">{{ $categorie->visibility_translated }} {!! $categorie->visibility_icon !!}</p>
+                                        </td>
+                                    @endif
+                                    <td> {{ $categorie->created_at->format('d/m/Y H:i') }} </td>
                                 </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Visibilidade</th>
+                                <th>Criada em</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -59,6 +74,13 @@
 @endsection
 @section('own_js')
     <script>
+        $(function(){
+            $('#example').DataTable({
+                "language": {
+                    "url": ptBr
+                }
+            });
+        });
         $('#btnCreateCategory').click(() => {
             
             renderHtmlInComponent("{{ route('categories.create') }}");

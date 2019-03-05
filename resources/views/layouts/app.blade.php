@@ -15,6 +15,8 @@
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script>
     <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -24,6 +26,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
@@ -86,6 +89,10 @@
         </main>
     </div>
     <script>
+        const ptBr = "{{ asset('lang/dataTables.Pt-br.json') }}"
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
         @if(Session::has('msg'))
             @switch(Session::get('type'))
                 @case('alert-success')
