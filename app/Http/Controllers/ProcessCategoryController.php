@@ -65,7 +65,7 @@ class ProcessCategoryController extends Controller
             if (empty($permissions)) {
                 return redirect()->route('categories.index')
                     ->with('type', 'alert-danger')
-                    ->with('msg', 'Você deve selecionar retrições para setore e/ou usuários.');
+                    ->with('msg', 'Você deve selecionar retrições para o setor e/ou usuários.');
             } else {
                 $usersIds = [];
                 $usersSelected = [];

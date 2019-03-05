@@ -46,27 +46,6 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="form-group">
-            <label for="lblDepartments"><b>Setores envolvidos:</b></label>
-            <select class="form-control selectpicker" name="departments[]" data-live-search="true"  
-            title="Selecione os setores que terão acesso a essa categoria."
-            multiple>
-                @foreach($groups as $group)
-                    <option value="{{ $group->id }}">{{ $group->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="lblUsers"><b>Usuários envolvidos:</b></label>
-            <select class="form-control selectpicker" name="users[]" data-live-search="true"  
-            title="Selecione os usuários que terão acesso a essa categoria."
-            multiple>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </div> --}}
-
     </div>
     <hr>
     <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Criar categoria</button>

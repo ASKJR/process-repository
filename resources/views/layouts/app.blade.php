@@ -14,6 +14,7 @@
     <script src="{{ asset('js/app.js') }}" ></script>
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/bootstrap-select.min.js') }}" defer></script>
+    <script src="{{ asset('js/toastr.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -22,6 +23,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
@@ -80,37 +82,29 @@
         </nav>
 
         <main class="py-4">
-            <div class="container">
-                {{-- default validate erros --}}
-                @if ($errors->any())
-                    @component('components.alert.standard')
-                        @slot('class')
-                            alert-danger
-                        @endslot
-                        @slot('message')
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        @endslot
-                    @endcomponent
-                @endif
-                {{-- flash messages --}}
-                @if(Session::has('msg'))
-                    @component('components.alert.standard')
-                        @slot('class')
-                            {{ Session::get('type') }}
-                        @endslot
-                        @slot('message')
-                            {{ Session::get('msg') }}
-                        @endslot
-                    @endcomponent
-                @endif
-            </div>
             @yield('content')
         </main>
     </div>
+    <script>
+        @if(Session::has('msg'))
+            @switch(Session::get('type'))
+                @case('alert-success')
+                    toastr.success('{{Session::get('msg')}}')
+                @break
+                @case('alert-danger')
+                    toastr.error('{{Session::get('msg')}}','Erro')
+                @break
+                @default
+                    toastr.info('{{Session::get('msg')}}')
+            @endswitch
+        @endif
+
+        @if($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error('{{$error}}','Erro')
+            @endforeach
+        @endif
+    </script>
     @yield('own_js')
 </body>
 </html>
