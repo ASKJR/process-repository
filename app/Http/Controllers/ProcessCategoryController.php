@@ -33,7 +33,7 @@ class ProcessCategoryController extends Controller
     public function create()
     {
         $groups = Group::orderBy('name')->get();
-        return view('process.category.create', compact('groups', 'users'))->render();
+        return view('process.category.create', compact('groups'))->render();
     }
 
     /**
@@ -52,7 +52,7 @@ class ProcessCategoryController extends Controller
         if ($request->input('visibility') == ProcessCategory::PUBLIC_PERMISSION) {
             ProcessCategory::create([
                 'name' => $name,
-                'permission' => json_encode([]),
+                'permission' => [],
                 'visibility' => ProcessCategory::PUBLIC_PERMISSION
             ]);
             return redirect()->route('categories.index')
@@ -65,35 +65,11 @@ class ProcessCategoryController extends Controller
             if (empty($permissions)) {
                 return redirect()->route('categories.index')
                     ->with('type', 'alert-danger')
-                    ->with('msg', 'Você deve selecionar retrições para o setor e/ou usuários.');
+                    ->with('msg', 'Você deve selecionar retrições de setor e/ou usuários, quando a categoria for restrita.');
             } else {
-                $usersIds = [];
-                $usersSelected = [];
-                $groupIds = [];
-
-                foreach ($permissions as $permission) {
-                    if ($permission[0] == 'g') {
-                        $groupId = explode("_", $permission)[1];
-                        $group = Group::findOrFail($groupId);
-                        $usersIds = array_merge($usersIds, $group->users->pluck('id')->all());
-                        $groupIds[] = $groupId;
-                    } else {
-                        $userId = explode("_", $permission)[1];
-
-                        if (!in_array($userId, $usersIds)) {
-                            $usersIds[] = $userId;
-                        }
-                        $usersSelected[] = $userId;
-                    }
-                }
-                $permission = [
-                    'users' => $usersIds,
-                    'users_selected' => $usersSelected, //usuários selecionados individualmente
-                    'groups' => $groupIds
-                ];
                 ProcessCategory::create([
                     'name' => $name,
-                    'permission' => json_encode($permission),
+                    'permission' => $this->getPermissionsFormatted($permissions),
                     'visibility' => ProcessCategory::RESTRICTED_PERMISSION
                 ]);
                 return redirect()->route('categories.index')
@@ -120,9 +96,10 @@ class ProcessCategoryController extends Controller
      * @param  \App\ProcessCategory  $processCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProcessCategory $processCategory)
+    public function edit(ProcessCategory $category)
     {
-        //
+        $groups = Group::orderBy('name')->get();
+        return view('process.category.edit', compact('groups', 'category'))->render();
     }
 
     /**
@@ -132,9 +109,53 @@ class ProcessCategoryController extends Controller
      * @param  \App\ProcessCategory  $processCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProcessCategory $processCategory)
+    public function update(Request $request, ProcessCategory $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+            'visibility' => 'required',
+        ]);
+
+        $name = $request->input('name');
+
+        if ($request->input('visibility') == ProcessCategory::PUBLIC_PERMISSION) {
+            $category->name = $name;
+            $category->permission = [];
+            $category->visibility = ProcessCategory::PUBLIC_PERMISSION;
+
+            if ($category->update()) {
+                return redirect()->route('categories.index')
+                    ->with('type', 'alert-success')
+                    ->with('msg', 'Categoria atualizada com sucesso.');
+            }
+
+            return redirect()->route('categories.index')
+                ->with('type', 'alert-danger')
+                ->with('msg', 'Não foi possível atualizar essa categoria.');
+        } else {
+
+            $permissions = (empty($request->input('permissions'))) ? [] : $request->input('permissions');
+
+            if (empty($permissions)) {
+                return redirect()->route('categories.index')
+                    ->with('type', 'alert-danger')
+                    ->with('msg', 'Você deve selecionar retrições de setor e/ou usuários, quando a categoria for restrita.');
+            }
+
+            $category->name = $name;
+            $category->permission = $this->getPermissionsFormatted($permissions);
+            $category->visibility = ProcessCategory::RESTRICTED_PERMISSION;
+
+            if ($category->update()) {
+                return redirect()->route('categories.index')
+                    ->with('type', 'alert-success')
+                    ->with('msg', 'Categoria atualizada com sucesso.');
+            }
+
+            return redirect()->route('categories.index')
+                ->with('type', 'alert-danger')
+                ->with('msg', 'Não foi possível atualizar essa categoria.');
+        }
     }
 
     /**
@@ -146,5 +167,35 @@ class ProcessCategoryController extends Controller
     public function destroy(ProcessCategory $processCategory)
     {
         //
+    }
+
+    private function getPermissionsFormatted($permissions)
+    {
+        $usersIds = [];
+        $usersSelected = [];
+        $groupIds = [];
+
+        foreach ($permissions as $permission) {
+            if ($permission[0] == 'g') {
+                $groupId = explode("_", $permission)[1];
+                $group = Group::findOrFail($groupId);
+                $usersIds = array_merge($usersIds, $group->users->pluck('id')->all());
+                $groupIds[] = $groupId;
+            } else {
+                $userId = explode("_", $permission)[1];
+
+                if (!in_array($userId, $usersIds)) {
+                    $usersIds[] = $userId;
+                }
+                $usersSelected[] = $userId;
+            }
+        }
+        $permission = [
+            'users' => $usersIds,
+            'users_selected' => $usersSelected, //usuários selecionados individualmente
+            'groups' => $groupIds
+        ];
+
+        return $permission;
     }
 }

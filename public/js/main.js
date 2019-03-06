@@ -1,11 +1,11 @@
 
-const renderHtmlInComponent = (url) => {
+const renderHtmlInComponent = (url, modalBodyId) => {
     $.ajax({
         async: false,
         type: 'GET',
         url: url,
         success: function(data) {
-            $('.modal-body').html(data);
+            $('#'+ modalBodyId).html(data);
         }
    });
 }

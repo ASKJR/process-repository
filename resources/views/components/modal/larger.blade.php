@@ -7,7 +7,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-        <div class="modal-body">
+        <div class="modal-body" id="{{ $modalBodyId }}">
             {{ $slot }}
         </div>
         </div>
