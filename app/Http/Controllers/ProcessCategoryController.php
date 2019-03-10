@@ -85,9 +85,18 @@ class ProcessCategoryController extends Controller
      * @param  \App\ProcessCategory  $processCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ProcessCategory $processCategory)
+    public function show(ProcessCategory $category)
     {
-        //
+        if ($category->visibility == ProcessCategory::PUBLIC_PERMISSION) {
+            return view('process.category.show', compact('category'));
+        } else {
+            $groupIds = $category->permission['groups'];
+            $userIds = $category->permission['users_selected'];
+            $groups = empty($groupIds) ? 'Não disponível' : Group::wherein('id', $groupIds)->pluck('name')->implode(', ');
+            $users = empty($userIds) ? 'Não disponível' : User::wherein('id', $userIds)->pluck('name')->implode(', ');
+
+            return view('process.category.show', compact('category', 'groups', 'users'));
+        }
     }
 
     /**

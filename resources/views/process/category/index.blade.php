@@ -50,6 +50,12 @@
                                     @endif
                                     <td> {{ $categorie->created_at->format('d/m/Y H:i') }} </td>
                                     <td>
+                                        @component('components.btn.show')
+                                            @slot('route')
+                                                {{route('categories.show',$categorie->id)}}
+                                            @endslot
+                                            Visualizar
+                                        @endcomponent
                                         @component('components.modal.btn')
                                             @slot('class')
                                                 btn btn-sm btn-primary btnEditCategory

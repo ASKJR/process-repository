@@ -1,0 +1,1 @@
+<a href="{{$route}}" class="btn btn-sm btn-show"> <b>{{$slot}} <i class="fas fa-search"></i></b> </a>

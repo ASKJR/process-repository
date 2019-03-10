@@ -27,6 +27,7 @@
     <link href="{{ asset('css/bootstrap-select.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
