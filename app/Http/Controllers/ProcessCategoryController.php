@@ -22,7 +22,7 @@ class ProcessCategoryController extends Controller
      */
     public function index()
     {
-        $categories = ProcessCategory::orderBy('name')->get();
+        $categories = ProcessCategory::getCategoriesAllowedToUser();
         $isCommitteeMember = auth()->user()->isCommitteeMember();
         return view('process.category.index', compact('categories', 'isCommitteeMember'));
     }

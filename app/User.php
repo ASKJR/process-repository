@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Group;
 
 class User extends Authenticatable
 {
@@ -34,5 +35,15 @@ class User extends Authenticatable
     public function isCommitteeMember()
     {
         return $this->is_process_committee_member;
+    }
+
+    public function isVIP()
+    {
+        return in_array($this->group_id, Group::VIP);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo('App\Group');
     }
 }

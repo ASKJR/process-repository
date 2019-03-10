@@ -56,4 +56,25 @@ class ProcessCategory extends Model
 
         return in_array($user_id, $this->permission['users_selected']);
     }
+
+    public static function getCategoriesAllowedToUser()
+    {
+        $user = auth()->user();
+        //if the logged user is a member of committee or VIP, then bring all categories
+        if ($user->isCommitteeMember() || $user->isVip()) {
+            return self::all()->sortBy('name');
+        }
+
+        //bring all public categories + specified categories for user
+        return self::all()->map(function ($category) {
+            if ($category->visibility == self::PUBLIC_PERMISSION) {
+                return $category;
+            } else if (in_array(auth()->user()->id, $category->permission['users'])) {
+                return $category;
+            }
+        })
+            ->reject(function ($name) {
+                return empty($name);
+            });
+    }
 }
