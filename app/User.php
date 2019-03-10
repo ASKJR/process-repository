@@ -26,4 +26,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $casts = [
+        'is_process_committee_member' => 'boolean',
+    ];
+
+    public function isCommitteeMember()
+    {
+        return $this->is_process_committee_member;
+    }
 }

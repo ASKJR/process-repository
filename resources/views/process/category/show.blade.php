@@ -33,8 +33,7 @@
                         <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Usuários <i class="fas fa-users"></i></a>
                     </div>
                 
-                    <div class="tab-content" style="margin-top: auto;
-margin-bottom: auto;" id="nav-tabContent">
+                    <div class="tab-content" style="margin-top: auto; margin-bottom: auto;" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"> <b>&nbsp;{{ $groups }}</b></div>
                         <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list"> <b>&nbsp;{{ $users }}</b> </div>
                     </div>

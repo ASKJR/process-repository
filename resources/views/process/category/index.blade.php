@@ -5,24 +5,26 @@
             <div class="row">
                 <h3>Categorias de processos</h3>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="float-right">
-                        @component('components.modal.btn')
-                            @slot('class')
-                                btn btn-sm btn-success
-                            @endslot
-                            @slot('target')
-                                #formCreateCategory
-                            @endslot
-                            @slot('id')
-                                btnCreateCategory
-                            @endslot
-                            <b>Criar categoria <i class="fas fa-plus-circle"></i></b>
-                        @endcomponent
+            @if($isCommitteeMember)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="float-right">
+                            @component('components.modal.btn')
+                                @slot('class')
+                                    btn btn-sm btn-success
+                                @endslot
+                                @slot('target')
+                                    #formCreateCategory
+                                @endslot
+                                @slot('id')
+                                    btnCreateCategory
+                                @endslot
+                                <b>Criar categoria <i class="fas fa-plus-circle"></i></b>
+                            @endcomponent
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
             <br>
             <div class="row">
                 <div class="col-md-12">
@@ -50,24 +52,27 @@
                                     @endif
                                     <td> {{ $categorie->created_at->format('d/m/Y H:i') }} </td>
                                     <td>
-                                        @component('components.btn.show')
-                                            @slot('route')
-                                                {{route('categories.show',$categorie->id)}}
-                                            @endslot
-                                            Visualizar
-                                        @endcomponent
-                                        @component('components.modal.btn')
-                                            @slot('class')
-                                                btn btn-sm btn-primary btnEditCategory
-                                            @endslot
-                                            @slot('target')
-                                                #formEditCategory
-                                            @endslot
-                                            @slot('id')
-                                                btnEditCategory
-                                            @endslot
-                                            <b data-edit-id="{{ $categorie->id }}">Editar <i class="fas fa-edit"></i></b>
-                                        @endcomponent
+                                        @if($isCommitteeMember)     
+                                            @component('components.btn.show')
+                                                @slot('route')
+                                                    {{route('categories.show',$categorie->id)}}
+                                                @endslot
+                                                Visualizar
+                                            @endcomponent
+                                            @component('components.modal.btn')
+                                                @slot('class')
+                                                    btn btn-sm btn-primary btnEditCategory
+                                                @endslot
+                                                @slot('target')
+                                                    #formEditCategory
+                                                @endslot
+                                                @slot('id')
+                                                    btnEditCategory
+                                                @endslot
+                                                <b data-edit-id="{{ $categorie->id }}">Editar <i class="fas fa-edit"></i></b>
+                                            @endcomponent
+                                        @endif
+                                        <a href="#" class="btn btn-sm" style="background-color:#f4cc04"><b> Processos</b> <i class="fas fa-folder-open"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

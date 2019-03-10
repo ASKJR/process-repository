@@ -12,6 +12,7 @@ class ProcessCategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('committee')->except('index');
     }
 
     /**
@@ -22,7 +23,8 @@ class ProcessCategoryController extends Controller
     public function index()
     {
         $categories = ProcessCategory::orderBy('name')->get();
-        return view('process.category.index', compact('categories'));
+        $isCommitteeMember = auth()->user()->isCommitteeMember();
+        return view('process.category.index', compact('categories', 'isCommitteeMember'));
     }
 
     /**
