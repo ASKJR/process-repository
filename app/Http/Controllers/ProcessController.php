@@ -3,18 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Process;
+use App\ProcessCategory;
 use Illuminate\Http\Request;
 
 class ProcessController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('process.permission');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ProcessCategory $category)
     {
-        //
+        return view('process.index', compact('category'));
     }
 
     /**

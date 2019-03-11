@@ -38,24 +38,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($categories as $categorie)
+                            @foreach($categories as $category)
                                 <tr>
-                                    <td> {{ $categorie->name }} </td>
-                                    @if($categorie->visibility == 'public')
+                                    <td> {{ $category->name }} </td>
+                                    @if($category->visibility == 'public')
                                         <td>
-                                            <p class="btn btn-sm btn-success"><b>{{ $categorie->visibility_translated }} {!! $categorie->visibility_icon !!}</b></p>
+                                            <p class="btn btn-sm btn-success"><b>{{ $category->visibility_translated }} {!! $category->visibility_icon !!}</b></p>
                                         </td>
                                     @else
                                         <td>
-                                            <p class="btn btn-sm btn-danger"><b>{{ $categorie->visibility_translated }} {!! $categorie->visibility_icon !!}</b></p>
+                                            <p class="btn btn-sm btn-danger"><b>{{ $category->visibility_translated }} {!! $category->visibility_icon !!}</b></p>
                                         </td>
                                     @endif
-                                    <td> {{ $categorie->created_at->format('d/m/Y H:i') }} </td>
+                                    <td> {{ $category->created_at->format('d/m/Y H:i') }} </td>
                                     <td>
                                         @if($isCommitteeMember)     
                                             @component('components.btn.show')
                                                 @slot('route')
-                                                    {{route('categories.show',$categorie->id)}}
+                                                    {{route('categories.show',$category->id)}}
                                                 @endslot
                                                 Visualizar
                                             @endcomponent
@@ -69,10 +69,10 @@
                                                 @slot('id')
                                                     btnEditCategory
                                                 @endslot
-                                                <b data-edit-id="{{ $categorie->id }}">Editar <i class="fas fa-edit"></i></b>
+                                                <b data-edit-id="{{ $category->id }}">Editar <i class="fas fa-edit"></i></b>
                                             @endcomponent
                                         @endif
-                                        <a href="#" class="btn btn-sm" style="background-color:#f4cc04"><b> Processos</b> <i class="fas fa-folder-open"></i></a>
+                                        <a href="{{ route ('processes.index', $category->id ) }}" class="btn btn-sm" style="background-color:#f4cc04"><b> Processos</b> <i class="fas fa-folder-open"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

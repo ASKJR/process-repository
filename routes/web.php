@@ -22,3 +22,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('categories', 'ProcessCategoryController');
+
+Route::get('category/{category}/processes', 'ProcessController@index')->name('processes.index');
