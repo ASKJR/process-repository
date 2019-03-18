@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Process;
 use App\ProcessCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProcessController extends Controller
 {
@@ -12,6 +14,7 @@ class ProcessController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('process.permission');
+        $this->middleware('committee')->except('index', 'show');
     }
 
     /**
@@ -21,7 +24,8 @@ class ProcessController extends Controller
      */
     public function index(ProcessCategory $category)
     {
-        return view('process.index', compact('category'));
+        $isCommitteeMember = auth()->user()->isCommitteeMember();
+        return view('process.index', compact('category', 'isCommitteeMember'));
     }
 
     /**
@@ -29,9 +33,9 @@ class ProcessController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(ProcessCategory $category)
     {
-        //
+        return view('process.create', compact('category'));
     }
 
     /**
@@ -40,9 +44,27 @@ class ProcessController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, ProcessCategory $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'cover' => 'required|file|mimes:jpeg,png|max:1024'
+        ]);
+
+        $cover = $request->cover->store('process/covers', 'public');
+
+        Process::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'cover' => $cover,
+            'process_category_id' => $category->id,
+            'created_by' => auth()->user()->id
+        ]);
+
+        return redirect()->route('processes.index', $category->id)
+            ->with('type', 'alert-success')
+            ->with('msg', 'Processo criado com sucesso.');
     }
 
     /**
@@ -51,9 +73,10 @@ class ProcessController extends Controller
      * @param  \App\Process  $process
      * @return \Illuminate\Http\Response
      */
-    public function show(Process $process)
+    public function show(ProcessCategory $category, Process $process)
     {
-        //
+        $imgSrc = Storage::url($process->cover);
+        return view('process.show', compact('category', 'process', 'imgSrc'))->render();
     }
 
     /**
@@ -62,9 +85,10 @@ class ProcessController extends Controller
      * @param  \App\Process  $process
      * @return \Illuminate\Http\Response
      */
-    public function edit(Process $process)
+    public function edit(ProcessCategory $category, Process $process)
     {
-        //
+        $categories = ProcessCategory::orderBy('name')->get();
+        return view('process.edit', compact('category', 'process', 'categories'));
     }
 
     /**
@@ -74,9 +98,36 @@ class ProcessController extends Controller
      * @param  \App\Process  $process
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Process $process)
+    public function update(Request $request, ProcessCategory $category, Process $process)
     {
-        //
+
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'cover' => 'nullable|file|mimes:jpeg,png|max:1024',
+            'category' => 'required'
+        ]);
+
+        $process->name = $request->name;
+        $process->description = $request->description;
+        $process->process_category_id = $request->category;
+
+        if (!empty($request->cover)) {
+            //removing last cover
+            Storage::disk('public')->delete($process->cover);
+            $newCover = $request->cover->store('process/covers', 'public');
+            $process->cover = $newCover;
+        }
+
+        if ($process->update()) {
+            return redirect()->route('processes.index', $category->id)
+                ->with('type', 'alert-success')
+                ->with('msg', 'Processo atualizado com sucesso.');
+        }
+
+        return redirect()->route('processes.index', $category->id)
+            ->with('type', 'alert-danger')
+            ->with('msg', 'Não foi possível atualizar esse processo.');
     }
 
     /**

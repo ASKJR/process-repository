@@ -1,8 +1,25 @@
 .btn-show {
-    background-color:#0D8297;
+    background-color:#0D8297;   
 }
+.btn-show > b {
+    color: #FFF
+}
+
 
 a.btn:link { color:#FFF; text-decoration:none;}
 a.btn:visited { color: #FFF; text-decoration:none;}
 a.btn:hover { color: #FFF; text-decoration:none;}
 a.btn:active { color: #FFF; text-decoration:none;}
+
+.file {
+    visibility: hidden;
+    position: absolute;
+}
+  
+.searchFile {
+    background-color: #007bff;
+    border-color: #007bff;
+    outline: none;
+    color: #fff;
+}
+  

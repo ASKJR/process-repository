@@ -77,4 +77,9 @@ class ProcessCategory extends Model
                 return empty($name);
             });
     }
+
+    public function processes()
+    {
+        return $this->hasMany('App\Process')->orderBy('name');
+    }
 }

@@ -17,6 +17,7 @@
     <script src="{{ asset('js/toastr.min.js') }}"></script>
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">

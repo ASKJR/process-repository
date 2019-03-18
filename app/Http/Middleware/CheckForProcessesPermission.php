@@ -26,7 +26,7 @@ class CheckForProcessesPermission
                 ->with('msg', 'Categoria inválida');
         }
 
-        if ($category->visibility != ProcessCategory::PUBLIC_PERMISSION && !in_array($user->id, $category->permission['users']) && !$user->isVIP()) {
+        if ($category->visibility != ProcessCategory::PUBLIC_PERMISSION && !in_array($user->id, $category->permission['users']) && !$user->isVIP() && !$user->isCommitteeMember()) {
             return redirect()->route('categories.index')
                 ->with('type', 'alert-danger')
                 ->with('msg', 'Você não possuí autorização para acessar os processos dessa categoria.');
