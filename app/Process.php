@@ -22,4 +22,9 @@ class Process extends Model
     {
         return $this->hasOne('App\User', 'id', 'created_by');
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\ProcessCategory', 'process_category_id');
+    }
 }

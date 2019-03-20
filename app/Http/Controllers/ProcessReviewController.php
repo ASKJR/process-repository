@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Process;
+use App\User;
 use App\ProcessReview;
 use Illuminate\Http\Request;
 
 class ProcessReviewController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('process.permission');
+        $this->middleware('committee')->except('index', 'show');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Process $process)
     {
-        //
+        $isCommitteeMember = auth()->user()->isCommitteeMember();
+        return view('process.review.index', compact('process', 'isCommitteeMember'));
     }
 
     /**
@@ -22,9 +34,10 @@ class ProcessReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Process $process)
     {
-        //
+        $users = User::orderBy('name')->get();
+        return view('process.review.create', compact('process', 'users'));
     }
 
     /**
@@ -33,9 +46,9 @@ class ProcessReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Process $process)
     {
-        //
+        dd('store');
     }
 
     /**

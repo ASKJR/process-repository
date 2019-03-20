@@ -18,6 +18,8 @@
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.pt-BR.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -29,6 +31,7 @@
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
@@ -113,6 +116,9 @@
                 toastr.error('{{$error}}','Erro')
             @endforeach
         @endif
+        $(document).ready(function(){
+            $.fn.datepicker.defaults.language = 'pt-BR';
+        });
     </script>
     @yield('own_js')
 </body>

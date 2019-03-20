@@ -24,3 +24,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('categories', 'ProcessCategoryController');
 
 Route::resource('category/{category}/processes', 'ProcessController');
+
+Route::resource('process/{process}/reviews', 'ProcessReviewController');

@@ -59,6 +59,7 @@
                                     @if($isCommitteeMember)
                                         <a href="{{ route('processes.edit',['category' => $category->id, 'process' => $process->id]) }}" class=" btn btn-sm btn-primary"> <b>Editar <i class="fas fa-edit"></i></b></a>     
                                     @endif
+                                        <a href="{{ route('reviews.index',['process' => $process->id]) }}" class="btn btn-sm" style="background-color:#f4cc04"> <b>Revisões <i class="fas fa-folder-open"></i></b></a>     
                                     </td>
                                 </tr>
                             @endforeach

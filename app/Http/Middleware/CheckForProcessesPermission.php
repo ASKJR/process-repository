@@ -17,7 +17,12 @@ class CheckForProcessesPermission
      */
     public function handle($request, Closure $next)
     {
-        $category = $request->route('category');
+        $c = $request->route('category');
+        $p = $request->route('process');
+
+        $category = ((!empty($c)) ? $c : ((!empty($p)) ? $p->category : null));
+
+
         $user = $request->user();
 
         if (empty($category)) {
@@ -29,7 +34,7 @@ class CheckForProcessesPermission
         if ($category->visibility != ProcessCategory::PUBLIC_PERMISSION && !in_array($user->id, $category->permission['users']) && !$user->isVIP() && !$user->isCommitteeMember()) {
             return redirect()->route('categories.index')
                 ->with('type', 'alert-danger')
-                ->with('msg', 'Você não possuí autorização para acessar os processos dessa categoria.');
+                ->with('msg', 'Você não possuí autorização para acessar os processos/reviões dessa categoria.');
         }
 
         return $next($request);
