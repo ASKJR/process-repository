@@ -27,4 +27,9 @@ class Process extends Model
     {
         return $this->belongsTo('App\ProcessCategory', 'process_category_id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany('App\ProcessReview');
+    }
 }

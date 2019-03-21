@@ -35,6 +35,30 @@
                 </div>
             @endif
         </div>
+        <ul class="timeline">
+            {{-- <li class="timeline-inverted">
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                <h4 class="timeline-title">Mussum ipsum cacilds</h4>
+                </div>
+                <div class="timeline-body">
+                <p>Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis.</p>
+                </div>
+            </div>
+            </li> --}}
+            @foreach($process->reviews as $review)
+                <li @if($loop->index%2 == 0) class="timeline-inverted" @endif>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                        <h4 class="timeline-title">Mussum ipsum cacilds</h4>
+                        </div>
+                        <div class="timeline-body">
+                        <p>{{ $review->comments }}</p>
+                        </div>
+                    </div>
+                </li>
+            @endforeach
+    </ul>
     </div>
     {{-- Create category MODAL--}}
     @component('components.modal.larger')

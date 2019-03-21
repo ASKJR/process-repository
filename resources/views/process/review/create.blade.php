@@ -1,8 +1,8 @@
-<form method="POST" action="{{ route('reviews.store', $process->id) }}">
+<form method="POST" action="{{ route('reviews.store', $process->id) }}" enctype="multipart/form-data">
     @csrf 
     <div class="form-group">
         <label for="lblProcessOwner"><b>Dono do processo:</b></label>
-        <select class="selectpicker form-control" data-live-search="true" 
+        <select class="selectpicker form-control" name="owner_id" data-live-search="true" 
         title="Selecione o do processo" required>
             @foreach($users as $user)
                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -11,11 +11,11 @@
     </div>
     <div class="form-group">
         <label for="lblReviewDueDate"><b>Data da revisão:</b></label>
-        <input class="form-control" data-provide="datepicker" data-date-format="dd/mm/yyyy"  name="review_due_date"placeholder="Data da revisão" required>
+        <input class="form-control" data-provide="datepicker" name="review_due_date" data-date-format="dd/mm/yyyy"  name="review_due_date"placeholder="Data da revisão" required>
     </div>
     <div class="form-group">
         <label for="nameLbl"><b>Upload de arquivo:</b></label>
-        <input type="file" name="cover" class="file">
+        <input type="file" name="processFile" class="file">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1"><i class="fas fa-paperclip"></i></span>

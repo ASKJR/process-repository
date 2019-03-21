@@ -48,7 +48,28 @@ class ProcessReviewController extends Controller
      */
     public function store(Request $request, Process $process)
     {
-        dd('store');
+        $request->validate([
+            'comments' => 'required',
+            'processFile' => 'required|file|mimes:jpeg,png,rar|max:2048',
+            'owner_id' => 'required|numeric',
+            'review_due_date' => 'required|date_format:d/m/Y'
+        ]);
+
+        $filename = $request->processFile->store('process/reviews');
+        $reviewDate =  \Carbon\Carbon::createFromFormat('d/m/Y H:i:s', $request->review_due_date . " 23:59:59");
+
+        ProcessReview::create([
+            'comments' => $request->comments,
+            'filename' => $filename,
+            'process_id' => $process->id,
+            'created_by' => auth()->user()->id,
+            'owner_id' => $request->owner_id,
+            'review_due_date' => $reviewDate->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route('reviews.index', $process->id)
+            ->with('type', 'alert-success')
+            ->with('msg', 'Revisão criada com sucesso');
     }
 
     /**

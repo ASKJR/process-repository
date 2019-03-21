@@ -32,6 +32,7 @@
     <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/bootstrap-datepicker.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/timeline.css') }}" rel="stylesheet"/>
 </head>
 <body>
     <div id="app">
