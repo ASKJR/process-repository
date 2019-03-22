@@ -6,6 +6,7 @@ use App\Process;
 use App\User;
 use App\ProcessReview;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessReviewController extends Controller
 {
@@ -115,5 +116,10 @@ class ProcessReviewController extends Controller
     public function destroy(ProcessReview $processReview)
     {
         //
+    }
+
+    public function downloadReviewFile(Process $process, ProcessReview $review)
+    {
+        return Storage::download($review->filename);
     }
 }

@@ -23,4 +23,14 @@ class ProcessReview extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'owner_id', 'id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo('App\User', 'created_by', 'id');
+    }
 }

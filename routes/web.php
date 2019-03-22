@@ -26,3 +26,4 @@ Route::resource('categories', 'ProcessCategoryController');
 Route::resource('category/{category}/processes', 'ProcessController');
 
 Route::resource('process/{process}/reviews', 'ProcessReviewController');
+Route::get('process/{process}/reviews/{review}/download', 'ProcessReviewController@downloadReviewFile')->name('reviews.download');
