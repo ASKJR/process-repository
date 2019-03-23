@@ -30,6 +30,11 @@ class Process extends Model
 
     public function reviews()
     {
-        return $this->hasMany('App\ProcessReview');
+        return $this->hasMany('App\ProcessReview')->orderBy('created_at', 'DESC');
+    }
+
+    public function latestReview()
+    {
+        return $this->reviews()->limit(1);
     }
 }

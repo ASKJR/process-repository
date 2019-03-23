@@ -30,6 +30,9 @@
                                 @endslot
                                 <b>Criar revisão <i class="fas fa-plus-circle"></i></b>
                             @endcomponent
+                            @if($reviewCount > 0)
+                                <a href="#" class="btn btn-sm" style="background-color:#4267B2"><b> Notificar interessados <i class="fas fa-bell"></i> </b></a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -48,8 +51,12 @@
                             <p> {{ $review->comments }} </p>
                             <hr>
                             <p><b>Dono do processo:</b> {{ $review->owner->name }}</p>
-                            <p><b>Data limite para revisão:</b> {{ $review->review_due_date->format('d/m/Y H:i:s') }}</p>
-                            <p><b>Arquivo: </b><a href="{{ route('reviews.download', ['process' => $process->id, 'review' => $review->id] ) }}">Download</a></p>
+                            <p><b>Data limite para revisão: <span style="color:#fc5f5f"> <i class="fas fa-calendar-alt"></i> {{ $review->review_due_date->format('d/m/Y H:i:s') }} </span></b></p>
+                            <p><b>Arquivo: </b><a href="{{ route('reviews.download', ['process' => $process->id, 'review' => $review->id] ) }}"><i class="fas fa-download"></i> Download </a></p>
+                            <hr>
+                            @if($isCommitteeMember)
+                                <a href="#" class="btn btn-sm btn-danger btnDeleteReview" data-review="{{ $review->id }}"><b>Excluir <i class="fas fa-trash-alt"></i></b></a>
+                            @endif
                         </div>
                     </div>
                 </li>
@@ -77,6 +84,57 @@
             e.preventDefault();
             renderHtmlInComponent("{{ route('reviews.create', $process->id) }}", "createModalBodyId");
             $(".selectpicker").selectpicker().selectpicker("render");
+        });
+
+        $('.btnDeleteReview').on('click', function(e) {
+            Swal.fire({
+                title: 'Cuidado! Você tem certeza dessa ação?',
+                text: "Atenção, Deletar uma revisão pode gerar diversos transtornos, por exemplo, quebra de consistências nas informações.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, deletar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "/process/{{$process->id}}/reviews/" + $(this).attr('data-review'),
+                        type: 'DELETE',
+                        dataType: "JSON",
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire(
+                                    'Revisão excluída!',
+                                    '',
+                                    'success'
+                                ).then((result) => {
+                                    window.location.reload(true);
+                                })
+                            } else {
+                               Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops...',
+                                    text: 'Não foi possível excluir essa revisão',
+                                })
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Oops...',
+                                text: 'Não foi possível excluir essa revisão',
+                            })
+                            console.log(xhr.responseText);
+                        }
+                    });
+                } 
+            })
         });
     </script>
 @endsection

@@ -15,7 +15,7 @@ class ProcessReviewController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('process.permission');
-        $this->middleware('committee')->except('index', 'show');
+        $this->middleware('committee')->except('index', 'show', 'downloadReviewFile');
     }
 
 
@@ -27,7 +27,8 @@ class ProcessReviewController extends Controller
     public function index(Process $process)
     {
         $isCommitteeMember = auth()->user()->isCommitteeMember();
-        return view('process.review.index', compact('process', 'isCommitteeMember'));
+        $reviewCount = $process->reviews->count();
+        return view('process.review.index', compact('process', 'isCommitteeMember', 'reviewCount'));
     }
 
     /**
@@ -113,9 +114,13 @@ class ProcessReviewController extends Controller
      * @param  \App\ProcessReview  $processReview
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProcessReview $processReview)
+    public function destroy(Process $process, ProcessReview $review)
     {
-        //
+        if ($review->delete()) {
+            return json_encode(['success' => 'true']);
+        }
+
+        return json_encode(['error' => 'true']);
     }
 
     public function downloadReviewFile(Process $process, ProcessReview $review)

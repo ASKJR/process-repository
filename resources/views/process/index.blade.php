@@ -59,7 +59,10 @@
                                     @if($isCommitteeMember)
                                         <a href="{{ route('processes.edit',['category' => $category->id, 'process' => $process->id]) }}" class=" btn btn-sm btn-primary"> <b>Editar <i class="fas fa-edit"></i></b></a>     
                                     @endif
-                                        <a href="{{ route('reviews.index',['process' => $process->id]) }}" class="btn btn-sm" style="background-color:#f4cc04"> <b>Revisões <i class="fas fa-folder-open"></i></b></a>     
+                                        <a href="{{ route('reviews.index',['process' => $process->id]) }}" class="btn btn-sm" style="background-color:#f4cc04"> <b>Revisões <i class="fas fa-folder-open"></i></b></a>
+                                        @if(!($review = $process->latestReview)->isEmpty())
+                                            <a href="{{ route('reviews.download', ['process' => $process->id, 'review' => $review[0]->id] ) }}" class="btn btn-sm" style="background-color:#30658B"> <b>Download <i class="fas fa-download"></i></b></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

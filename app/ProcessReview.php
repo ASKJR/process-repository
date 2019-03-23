@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProcessReview extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'process_review';
 
     protected $fillable = [
