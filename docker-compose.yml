@@ -20,7 +20,7 @@ services:
     external_links:
      - web.nginx-proxy
     environment:
-     - VIRTUAL_HOST=laravel.com
+     - VIRTUAL_HOST=albertokato.com
      - VIRTUAL_PORT=9000
     volumes:
       - ./:/var/www
