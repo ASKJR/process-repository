@@ -3,7 +3,7 @@ services:
   php-fpm:
     container_name: process-repository-php-fpm
     build:
-      context: ./docker2/php
+      context: ./docker/php
       dockerfile: php-fpm.dockerfile
     working_dir: /var/www
     external_links:
@@ -13,7 +13,7 @@ services:
   nginx:
     container_name: process-repository-nginx
     build:
-      context: ./docker2/nginx
+      context: ./docker/nginx
       dockerfile: nginx.dockerfile
     links:
       - php-fpm
@@ -24,7 +24,7 @@ services:
      - VIRTUAL_PORT=9000
     volumes:
       - ./:/var/www
-      - ./docker2/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
     expose:
       - "80"
     depends_on:
