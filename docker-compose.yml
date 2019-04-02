@@ -5,6 +5,7 @@ services:
     build:
       context: ./docker/php
       dockerfile: php-fpm.dockerfile
+    image: process-repository.php-fpm
     working_dir: /var/www
     external_links:
      - web.db
@@ -15,6 +16,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: nginx.dockerfile
+    image: process-repository.nginx
     links:
       - php-fpm
     external_links:
