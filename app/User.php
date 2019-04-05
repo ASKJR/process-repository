@@ -46,4 +46,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Group');
     }
+
+    public function scopeVip($query)
+    {
+        return $query->where('group_id', Group::VIP);
+    }
+
+    public function scopeCommittee($query)
+    {
+        return $query->where('is_process_committee_member', 1);
+    }
 }

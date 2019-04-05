@@ -38,7 +38,11 @@ class ProcessReviewController extends Controller
      */
     public function create(Process $process)
     {
-        $users = User::orderBy('name')->get();
+        $users = User::vip()
+            ->orWhere('is_process_committee_member', 1)
+            ->orWhereIn('id', $process->category->permission['users'])
+            ->orderBy('name')
+            ->get();
         return view('process.review.create', compact('process', 'users'));
     }
 
