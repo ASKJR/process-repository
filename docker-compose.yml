@@ -22,7 +22,7 @@ services:
     external_links:
      - web.nginx-proxy
     environment:
-     - VIRTUAL_HOST=albertokato.com.br,www.albertokato.com.br
+     - VIRTUAL_HOST=repositorio.albertokato.com.br
      - VIRTUAL_PORT=9000
     volumes:
       - ./:/var/www
