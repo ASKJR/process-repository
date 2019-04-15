@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    You are logged in! <a href="{{asset('storage/failureType.pdf')}}"> Download </a>
                 </div>
             </div>
         </div>
